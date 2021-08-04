@@ -1,5 +1,6 @@
 <?php
-
+//include './Parsedown.php';
+require_once('markdown_extended.php');
 class UOJBlogEditor {
 	public $type = 'blog';
 	public $name;
@@ -101,7 +102,9 @@ class UOJBlogEditor {
 				$v8 = new V8Js('POST');
 				$v8->content_md = $this->post_data['content_md'];
 				$v8->executeString(file_get_contents($_SERVER['DOCUMENT_ROOT'] . '/js/marked.js'), 'marked.js');
-				$this->post_data['content'] = $v8->executeString('marked(POST.content_md)');
+				//$this->post_data['content'] = $v8->executeString('marked(POST.content_md)');
+				//$Parsedown=new Parsedown();
+				$this->post_data['content']=MarkdownExtended($this->post_data['content_md']);
 			} catch (V8JsException $e) {
 				die(json_encode(array('content_md' => '未知错误')));
 			}
