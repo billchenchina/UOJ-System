@@ -1,6 +1,6 @@
 <?php
 include './Parsedown.php';
-//require_once('markdown_extended.php');
+require_once('markdown_extended.php');
 class UOJBlogEditor {
 	public $type = 'blog';
 	public $name;
@@ -105,60 +105,45 @@ class UOJBlogEditor {
 				//$this->post_data['content'] = $v8->executeString('marked(POST.content_md)');
 				$Parsedown=new Parsedown();
 				$MD=$this->post_data['content_md'];
-				$len=strlen($test);
+				$MD=str_replace('```c++','~~~cpp',$MD);
+				$MD=str_replace('```','~~~',$MD);
+				$len=strlen($MD);
 				$stt=0;
 				$pre=0;
 				$ans=array();
-				for($i=0;$i<$len;$i++)
+				for($i=1;$i<$len;$i++)
 				{
-    				if($MD[$i]=='$')
+    				if($MD[$i]=='$' && $MD[$i-1]=='$')
     				{
         				if($stt==0)
         				{
             				$stt=1;
-            				$tmp=substr($MD,$pre,$i-$pre);
+            				$tmp=substr($MD,$pre,$i-$pre-1);
             				array_push($ans,$tmp);
             				$pre=$i;
-            				if($MD[$i+1]=='$')
-            				{
-                				$i++;
-            				}
-            				else 
-            				{
-
-            				}
         				}
         				else 
         				{
             				$stt=0;
-				            if($MD[$i+1]=='$')
-            				{
-                				$i++;
-                				$tmp=substr($MD,$pre,$i-$pre+1);
-                				array_push($ans,$tmp);
-                				$pre=$i+1;
+                     			$tmp=substr($MD,$pre,$i-$pre+1);
+                			array_push($ans,$tmp);
+                			$pre=$i+1;
             				}
-            				else 
-            				{
-                				$tmp=substr($MD,$pre,$i-$pre+1);
-                				array_push($ans,$tmp);
-                				$pre=$i+1;
-            				}
-        				}
     				}
-					else if($i==$len-1)
-    				{
-    				    $tmp=substr($MD,$pre,$i-$pre+1);
-    				    array_push($ans,$tmp);
-    				}
+				else if($i==$len-1)
+				{
+					$tmp=substr($MD,$pre,$i-$pre+1);
+					array_push($ans,$tmp);
+				}
 				}
 				$ans2=array();
 				foreach($ans as $v)
 				{
     				$tmp='';
-    				if(strstr($v,'$')==FALSE)
+    				if(strstr($v,'$$')==FALSE)
     				{
-        				$tmp=$Parsedown->text($v);
+        				//$tmp=$Parsedown->text($v);
+					$tmp=MarkdownExtended($v);
         				array_push($ans2,$tmp);
     				}
     				else 
@@ -166,7 +151,10 @@ class UOJBlogEditor {
         				array_push($ans2,$v);
     				}
 				}
+				unset($ans2[0]);
+				//unset($ans[0]);
 				$ans2=implode($ans2);
+				//$ans=implode($ans);
 				$this->post_data['content']=$ans2;
 				//$this->post_data['content']=MarkdownExtended($this->post_data['content_md']);
 			} catch (V8JsException $e) {
