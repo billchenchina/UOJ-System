@@ -1,6 +1,6 @@
 <?php
-//include './Parsedown.php';
-require_once('markdown_extended.php');
+include './Parsedown.php';
+//require_once('markdown_extended.php');
 class UOJBlogEditor {
 	public $type = 'blog';
 	public $name;
@@ -99,12 +99,76 @@ class UOJBlogEditor {
 		if ($this->type == 'blog') {
 			$content_md = $_POST[$this->name . '_content_md'];
 			try {
-				$v8 = new V8Js('POST');
-				$v8->content_md = $this->post_data['content_md'];
-				$v8->executeString(file_get_contents($_SERVER['DOCUMENT_ROOT'] . '/js/marked.js'), 'marked.js');
+				//$v8 = new V8Js('POST');
+				//$v8->content_md = $this->post_data['content_md'];
+				//$v8->executeString(file_get_contents($_SERVER['DOCUMENT_ROOT'] . '/js/marked.js'), 'marked.js');
 				//$this->post_data['content'] = $v8->executeString('marked(POST.content_md)');
-				//$Parsedown=new Parsedown();
-				$this->post_data['content']=MarkdownExtended($this->post_data['content_md']);
+				$Parsedown=new Parsedown();
+				$MD=$this->post_data['content_md'];
+				$len=strlen($test);
+				$stt=0;
+				$pre=0;
+				$ans=array();
+				for($i=0;$i<$len;$i++)
+				{
+    				if($MD[$i]=='$')
+    				{
+        				if($stt==0)
+        				{
+            				$stt=1;
+            				$tmp=substr($MD,$pre,$i-$pre);
+            				array_push($ans,$tmp);
+            				$pre=$i;
+            				if($MD[$i+1]=='$')
+            				{
+                				$i++;
+            				}
+            				else 
+            				{
+
+            				}
+        				}
+        				else 
+        				{
+            				$stt=0;
+				            if($MD[$i+1]=='$')
+            				{
+                				$i++;
+                				$tmp=substr($MD,$pre,$i-$pre+1);
+                				array_push($ans,$tmp);
+                				$pre=$i+1;
+            				}
+            				else 
+            				{
+                				$tmp=substr($MD,$pre,$i-$pre+1);
+                				array_push($ans,$tmp);
+                				$pre=$i+1;
+            				}
+        				}
+    				}
+					else if($i==$len-1)
+    				{
+    				    $tmp=substr($MD,$pre,$i-$pre+1);
+    				    array_push($ans,$tmp);
+    				}
+				}
+				$ans2=array();
+				foreach($ans as $v)
+				{
+    				$tmp='';
+    				if(strstr($v,'$')==FALSE)
+    				{
+        				$tmp=$Parsedown->text($v);
+        				array_push($ans2,$tmp);
+    				}
+    				else 
+    				{
+        				array_push($ans2,$v);
+    				}
+				}
+				$ans2=implode($ans2);
+				$this->post_data['content']=$ans2;
+				//$this->post_data['content']=MarkdownExtended($this->post_data['content_md']);
 			} catch (V8JsException $e) {
 				die(json_encode(array('content_md' => '未知错误')));
 			}
