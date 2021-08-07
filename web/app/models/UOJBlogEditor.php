@@ -1,5 +1,5 @@
 <?php
-include './Parsedown.php';
+//include './Parsedown.php';
 require_once('markdown_extended.php');
 class UOJBlogEditor {
 	public $type = 'blog';
@@ -103,7 +103,7 @@ class UOJBlogEditor {
 				//$v8->content_md = $this->post_data['content_md'];
 				//$v8->executeString(file_get_contents($_SERVER['DOCUMENT_ROOT'] . '/js/marked.js'), 'marked.js');
 				//$this->post_data['content'] = $v8->executeString('marked(POST.content_md)');
-				$Parsedown=new Parsedown();
+				//$Parsedown=new Parsedown();
 				$MD=$this->post_data['content_md'];
 				$MD=str_replace('```c++','~~~cpp',$MD);
 				$MD=str_replace('```','~~~',$MD);
@@ -120,12 +120,12 @@ class UOJBlogEditor {
             				$stt=1;
             				$tmp=substr($MD,$pre,$i-$pre-1);
             				array_push($ans,$tmp);
-            				$pre=$i;
+            				$pre=$i-1;
         				}
-        				else 
+        				else if($stt==1 && $i!=$len-1 && $MD[$i+1]!='$')
         				{
             				$stt=0;
-                     			$tmp=substr($MD,$pre,$i-$pre+1);
+                     		$tmp=substr($MD,$pre,$i-$pre+1);
                 			array_push($ans,$tmp);
                 			$pre=$i+1;
             				}
@@ -143,7 +143,7 @@ class UOJBlogEditor {
     				if(strstr($v,'$$')==FALSE)
     				{
         				//$tmp=$Parsedown->text($v);
-					$tmp=MarkdownExtended($v);
+						$tmp=MarkdownExtended($v);
         				array_push($ans2,$tmp);
     				}
     				else 
@@ -151,7 +151,7 @@ class UOJBlogEditor {
         				array_push($ans2,$v);
     				}
 				}
-				unset($ans2[0]);
+				//unset($ans2[0]);
 				//unset($ans[0]);
 				$ans2=implode($ans2);
 				//$ans=implode($ans);
