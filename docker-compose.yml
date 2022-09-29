@@ -1,7 +1,13 @@
 version: "3"
 services:
+  base:
+    image: uojbase
+    build:
+      context: ./
+      dockerfile: ./Dockerfile.base
   web:
-    build: web
+    image: uojweb
+    build: ./web
     ports:
       - 8000:80
     networks:
@@ -9,6 +15,8 @@ services:
     volumes:
       - ./web/src:/var/www/html
       - uojdata:/var/uoj_data
+    depends_on:
+      - base
   db:
     image: mysql
     networks:
@@ -20,11 +28,14 @@ services:
       - ./db:/docker-entrypoint-initdb.d
     command: mysqld --default-time-zone=+8:00 --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --sql-mode=ONLY_FULL_GROUP_BY,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION
   judger:
-    build: judger
+    build: ./judger
+    image: uojjudger
     networks:
       - uoj
     volumes:
       - ./judgeconf/:/opt/uoj/judger/conf/
+    depends_on:
+      - base
 networks:
   uoj:
 volumes:

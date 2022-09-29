@@ -5,10 +5,10 @@ set -Eeuo pipefail
 if [ ! -f /var/www/html/index.php ]; then
     rm -rf /var/www/html/*
     cp -r /usr/src/uoj/. /var/www/html/
-    chown -R www-data:www-data /var/www/html/app/storage/
     cp /var/www/html/app/.default-config.php /var/www/html/app/.config.php
-
 fi
+
+chown -R www-data:www-data /var/www/html/app/storage/
 
 if [ ! -f /var/uoj_data/.UOJSetupDone ]; then
     mkdir -p /var/uoj_data/

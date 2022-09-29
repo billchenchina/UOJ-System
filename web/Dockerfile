@@ -1,4 +1,4 @@
-FROM ubuntu:20.04
+FROM uojbase
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN sed -i -e "s|archive.ubuntu.com|mirrors.hit.edu.cn|g" -e "s|security.ubuntu.com|mirrors.hit.edu.cn|g" /etc/apt/sources.list
