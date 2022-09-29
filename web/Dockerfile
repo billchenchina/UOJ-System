@@ -5,10 +5,10 @@ RUN sed -i -e "s|archive.ubuntu.com|mirrors.hit.edu.cn|g" -e "s|security.ubuntu.
 
 RUN apt-get update && \
     apt-get install -y apache2 zip unzip apache2 libapache2-mod-xsendfile libapache2-mod-php php php-dev php-pear php-zip php-mysql php-mbstring
-
+COPY 000-uoj.conf /etc/apache2/sites-available/
 COPY /docker-entrypoint.sh /
 COPY src /usr/src/uoj
-VOLUME ["/var/www/html"]
+VOLUME ["/var/www/html", "/var/uoj_data/"]
 ENTRYPOINT [ "/docker-entrypoint.sh" ]
 CMD ["/usr/sbin/apache2ctl", "-D", "FOREGROUND"]
 

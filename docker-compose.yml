@@ -8,6 +8,7 @@ services:
       - uoj
     volumes:
       - ./web/src:/var/www/html
+      - uojdata:/var/uoj_data
   db:
     image: mysql
     networks:
@@ -16,11 +17,15 @@ services:
       - MYSQL_ROOT_PASSWORD=password
       - MYSQL_DATABASE=app_uoj233
     volumes:
-      - /home/billchenchina/projects/UOJ-System/db:/docker-entrypoint-initdb.d
+      - ./db:/docker-entrypoint-initdb.d
     command: mysqld --default-time-zone=+8:00 --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --sql-mode=ONLY_FULL_GROUP_BY,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION
   judger:
     build: judger
     networks:
       - uoj
+    volumes:
+      - ./judgeconf/:/opt/uoj/judger/conf/
 networks:
   uoj:
+volumes:
+  uojdata:
