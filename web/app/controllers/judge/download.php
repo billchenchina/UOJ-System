@@ -19,7 +19,7 @@
 			if (!validateUInt($id) || !($problem = queryProblemBrief($id))) {
 				become404Page();
 			}
-			$file_name = "/var/uoj_data/$id.zip";
+			$file_name = UOJContext::uojDataZipPath($id);
 			$download_name = "$id.zip";
 			break;
 		case 'judger':

@@ -208,7 +208,7 @@ EOD
 ?>
 <?php echoUOJPageHeader(HTML::stripTags($problem['title']) . ' - ' . UOJLocale::get('problems::problem')) ?>
 <?php
-	$limit = getUOJConf("/var/uoj_data/{$problem['id']}/problem.conf");
+	$limit = getUOJConf(UOJContext::uojDataFolderPath($problem['id']) . "/problem.conf");
 	$time_limit = $limit['time_limit'];
 	$memory_limit = $limit['memory_limit'];
 ?>

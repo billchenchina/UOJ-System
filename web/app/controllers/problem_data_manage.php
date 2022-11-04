@@ -13,7 +13,7 @@
 	$oj_name = UOJConfig::$data['profile']['oj-name'];
 	$problem_extra_config = getProblemExtraConfig($problem);
 
-	$data_dir = "/var/uoj_data/${problem['id']}";
+	$data_dir = UOJContext::uojDataFolderPath($problem['id']);
 
 	function echoFileNotFound($file_name) {
 		echo '<h4>', htmlspecialchars($file_name), '<sub class="text-danger"> ', '文件未找到', '</sub></h4>';
@@ -55,9 +55,9 @@
 				move_uploaded_file($_FILES["problem_data_file"]["tmp_name"], $up_filename);
 				$zip = new ZipArchive;
 				if ($zip->open($up_filename) === TRUE) {
-					$zip->extractTo("/var/uoj_data/upload/{$problem['id']}");
+					$zip->extractTo(UOJContext::uojDataUploadPath($problem['id']));
 					$zip->close();
-					exec("cd /var/uoj_data/upload/{$problem['id']}; if [ -z "`find . -maxdepth 1 -type f`" ]; then for sub_dir in `find -maxdepth 1 -type d ! -name .`; do mv -f \$sub_dir/* . && rm -rf \$sub_dir; done; fi");
+					exec("cd " . UOJContext::uojDataUploadPath($problem['id']) . "; if [ -z \"`find . -maxdepth 1 -type f`\" ]; then for sub_dir in `find -maxdepth 1 -type d ! -name .`; do mv -f \$sub_dir/* . && rm -rf \$sub_dir; done; fi");
 					echo "<script>alert('上传成功！')</script>";
 				} else {
 					$errmsg = "解压失败！";
@@ -74,7 +74,7 @@
 	//添加配置文件
 	if ($_POST['problem_settings_file_submit']=='submit') {
 		if ($_POST['use_builtin_checker'] and $_POST['n_tests'] and $_POST['input_pre'] and $_POST['input_suf'] and $_POST['output_pre'] and $_POST['output_suf'] and $_POST['time_limit'] and $_POST['memory_limit']) {
-			$set_filename="/var/uoj_data/upload/{$problem['id']}/problem.conf";
+			$set_filename= UOJContext::uojDataUploadPath($problem['id']) . "/problem.conf";
 			$has_legacy=false;
 			if (file_exists($set_filename)) {
 				$has_legacy=true;
@@ -576,7 +576,7 @@ EOD
 		
 			$tot_size = 0;
 			foreach ($requirement as $req) {
-				$zip_file->addFile("/var/uoj_data/{$problem['id']}/std.cpp", $req['file_name']);
+				$zip_file->addFile(UOJContext::uojDataFolderPath($problem['id']) . "/std.cpp", $req['file_name']);
 				$tot_size += $zip_file->statName($req['file_name'])['size'];
 			}
 		

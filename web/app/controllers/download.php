@@ -23,7 +23,7 @@
 
 			$id = $_GET['id'];
 			
-			$file_name = "/var/uoj_data/$id/download.zip";
+			$file_name = UOJContext::uojDataFolderPath($id) . "/download.zip";
 			$download_name = "problem_$id.zip";
 			break;
 		case 'testlib.h':

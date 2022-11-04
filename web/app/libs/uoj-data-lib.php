@@ -3,10 +3,10 @@
 	// However, this lib exists due to some history issues.
 	
 	function dataNewProblem($id) {
-		mkdir("/var/uoj_data/upload/$id");
-		mkdir("/var/uoj_data/$id");
+		mkdir(UOJContext::uojDataUploadPath($id));
+		mkdir(UOJContext::uojDataFolderPath($id));
 		
-		exec("cd /var/uoj_data; rm $id.zip; zip $id.zip $id -r -q");
+		exec("cd " . UOJContext::uojDataPath() ."; rm $id.zip; zip $id.zip $id -r -q");
 	}
 
 	class UOJProblemConfException extends Exception {
@@ -27,8 +27,8 @@
 			return "invalid problem id";
 		}
 		
-		exec("rm /var/uoj_data/upload/$id -r");
-		exec("rm /var/uoj_data/$id -r");
+		exec("rm " . UOJContext::uojDataUploadPath($id) . " -r");
+		exec("rm " . UOJContext::uojDataFolderPath($id) . " -r");
 		dataNewProblem($id);
 	}
 	
@@ -153,9 +153,9 @@
 				return "invalid problem id";
 			}
 
-			$this->upload_dir = "/var/uoj_data/upload/$id";
-			$this->data_dir = "/var/uoj_data/$id";
-			$this->prepare_dir = "/var/uoj_data/prepare_$id";
+			$this->upload_dir = UOJContext::uojDataUploadPath($id);
+			$this->data_dir = UOJContext::uojDataFolderPath($id);
+			$this->prepare_dir = UOJContext::uojDataPreparePath($id);
 
 			if (file_exists($this->prepare_dir)) {
 				return "please wait until the last sync finish";
@@ -323,7 +323,7 @@
 			exec("rm {$this->data_dir} -r");
 			rename($this->prepare_dir, $this->data_dir);
 		
-			exec("cd /var/uoj_data; rm $id.zip; zip $id.zip $id -r -q");
+			exec("cd " . UOJContext::uojDataPath() . "; rm $id.zip; zip $id.zip $id -r -q");
 
 			return '';
 		}
@@ -335,7 +335,7 @@
 	function dataAddExtraTest($problem, $input_file_name, $output_file_name) {
 		$id = $problem['id'];
 
-		$cur_dir = "/var/uoj_data/upload/$id";
+		$cur_dir = UOJContext::uojDataUploadPath($id);
 		
 		$problem_conf = getUOJConf("{$cur_dir}/problem.conf");
 		if ($problem_conf == -1 || $problem_conf == -2) {

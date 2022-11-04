@@ -32,7 +32,22 @@ class UOJContext {
 		return $_SERVER['DOCUMENT_ROOT'];
 	}
 	public static function storagePath() {
-		return $_SERVER['DOCUMENT_ROOT'].'/app/storage';
+		return "/var/uoj/storage";
+	}
+	public static function uojDataPath() {
+		return "/var/uoj/data";
+	}
+	public static function uojDataUploadPath() {
+		return "/var/uoj/data/upload";
+	}
+	public static function uojDataZipPath($id) {
+		return "/var/uoj/data/$id.zip";
+	}
+	public static function uojDataFolderPath($id) {
+		return "/var/uoj/data/$id";
+	}
+	public static function uojDataPreparePath($id) {
+		return "/var/uoj/data/prepare_$id";
 	}
 	public static function remoteAddr() {
 		return $_SERVER['REMOTE_ADDR'];
