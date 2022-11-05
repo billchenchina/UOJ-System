@@ -16,7 +16,7 @@ if [ ! -f /usr/src/uoj/app/.config.php ]; then
     salt1=$(openssl rand -hex 16)
     salt2=$(openssl rand -hex 16)
     salt3=$(openssl rand -hex 16)
-    sed -i -e "s|salt1|$salt0|g" -e "s|salt1|$salt1|g" \
+    sed -i -e "s|salt0|$salt0|g" -e "s|salt1|$salt1|g" \
            -e "s|salt2|$salt2|g" -e "s|salt3|$salt3|g" /var/uoj/config.php
     ln -s /var/uoj/config.php /usr/src/uoj/app/.config.php
 fi
