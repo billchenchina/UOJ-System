@@ -1,0 +1,8 @@
+{
+    "uoj_protocol": "http",
+    "uoj_host": "web",
+    "judger_name": "judger1",
+    "judger_password": "123456",
+    "socket_port": 2333,
+    "socket_password": "123456"
+}

@@ -1,0 +1,31 @@
+FROM ubuntu:20.04
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+# RUN sed -i  -e "s|archive.ubuntu.com|mirrors.hit.edu.cn|g" \
+#             -e "s|security.ubuntu.com|mirrors.bfsu.edu.cn|g" \
+#             /etc/apt/sources.list
+
+RUN apt-get update && \
+    apt-get -y install --no-install-recommends  \
+    build-essential \
+    fp-compiler \
+    openjdk-11-jdk \
+    openjdk-8-jdk \
+    python \
+    python3 \
+    python3-requests \
+    unzip \
+    zip
+
+WORKDIR /opt/uoj/judger/
+COPY judger/src /opt/uoj/judger/
+COPY judger/docker-entrypoint.sh /
+RUN useradd judger && \
+    chown -R judger:judger /opt/uoj/judger
+USER judger
+RUN cd uoj_judger && \
+    make -j$(($(nproc) + 1))
+
+ENTRYPOINT [ "/docker-entrypoint.sh" ]
+CMD ["/opt/uoj/judger/judge_client"]

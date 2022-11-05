@@ -1,0 +1,47 @@
+FROM ubuntu:20.04
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+# RUN sed -i  -e "s|archive.ubuntu.com|mirrors.hit.edu.cn|g" \
+#             -e "s|security.ubuntu.com|mirrors.bfsu.edu.cn|g" \
+#             /etc/apt/sources.list
+
+RUN apt-get update && \
+    apt-get -y install --no-install-recommends  \
+    apache2 \
+    ca-certificates \
+    libapache2-mod-php \
+    libapache2-mod-xsendfile \
+    php \
+    php-dev \
+    php-mbstring \
+    php-mysql \
+    php-pear \
+    php-zip \
+    unzip \
+    zip
+
+# Judger
+RUN apt-get update && \
+    apt-get -y install --no-install-recommends  \
+    build-essential \
+    unzip \
+    zip
+
+COPY judger/src /opt/uoj/judger/
+RUN cd /opt/uoj/judger/uoj_judger && \
+    make -j$(($(nproc) + 1))
+
+COPY web/000-uoj.conf /etc/apache2/sites-available/
+COPY web/docker-entrypoint.sh /
+COPY web/src /usr/src/uoj
+RUN mkdir -p /var/uoj && \
+    find /etc/apache2/ -type f -name "*.conf" -exec sed -i "s|/var/www|/usr/src|g" {} + && \
+    a2dissite 000-default && \
+    a2ensite 000-uoj.conf && \
+    a2enmod rewrite headers && \
+    sed -i -e '172s/AllowOverride None/AllowOverride All/' /etc/apache2/apache2.conf
+EXPOSE 80
+VOLUME ["/var/uoj/", "/var/www/uoj/"]
+ENTRYPOINT [ "/docker-entrypoint.sh" ]
+CMD ["/usr/sbin/apache2ctl", "-D", "FOREGROUND"]

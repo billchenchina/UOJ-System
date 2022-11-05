@@ -1,0 +1,35 @@
+version: '3'
+services:
+  web:
+    image: "uoj:web"
+    ports:
+      - "8000:80"
+    volumes:
+      - ./data:/var/uoj
+      - ./web/src:/var/www/uoj
+    networks:
+      - uoj
+  db:
+    image: mysql
+    networks:
+      - uoj
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=app_uoj233
+    volumes:
+      - ./initdb:/docker-entrypoint-initdb.d
+    command: mysqld --default-time-zone=+8:00 --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --sql-mode=ONLY_FULL_GROUP_BY,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION
+  judger:
+    image: "uoj:judger"
+    networks:
+      - uoj
+    environment:
+      - UOJ_PROTOCOL=http
+      - UOJ_HOST=web
+      - JUDGER_NAME=judger1
+      - JUDGER_PASSWORD=123456
+      - SOCKET_PORT=2333
+      - SOCKET_PASSWORD=123456
+networks:
+  uoj:
+  

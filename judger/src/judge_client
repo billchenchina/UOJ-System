@@ -49,7 +49,7 @@ def freopen(f, g):
 def init():
 	global jconf
 	os.chdir(os.path.dirname(os.path.realpath(__file__)))
-	with open('.conf.json', 'r') as fp:
+	with open('conf/conf.json', 'r') as fp:
 		jconf = json.load(fp)
 		assert 'uoj_protocol' in jconf
 		assert 'uoj_host' in jconf
