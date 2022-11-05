@@ -11,7 +11,13 @@ mkdir -p /var/uoj/data/upload/
 mkdir -p /var/uoj/storage/{submission,tmp}/
 
 if [ ! -f /usr/src/uoj/app/.config.php ]; then
-    cp /usr/src/uoj/app/.default-config.php /var/uoj/config.php
+    cp /usr/src/uoj/app/config-docker.php /var/uoj/config.php
+    salt0=$(openssl rand -hex 16)
+    salt1=$(openssl rand -hex 16)
+    salt2=$(openssl rand -hex 16)
+    salt3=$(openssl rand -hex 16)
+    sed -i -e "s|salt1|$salt0|g" -e "s|salt1|$salt1|g" \
+           -e "s|salt2|$salt2|g" -e "s|salt3|$salt3|g" /var/uoj/config.php
     ln -s /var/uoj/config.php /usr/src/uoj/app/.config.php
 fi
 

@@ -35,6 +35,7 @@ RUN cd /opt/uoj/judger/uoj_judger && \
 COPY web/000-uoj.conf /etc/apache2/sites-available/
 COPY web/docker-entrypoint.sh /
 COPY web/src /usr/src/uoj
+COPY web/config-docker.php /usr/src/uoj/app/
 RUN mkdir -p /var/uoj && \
     find /etc/apache2/ -type f -name "*.conf" -exec sed -i "s|/var/www|/usr/src|g" {} + && \
     a2dissite 000-default && \
