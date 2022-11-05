@@ -17,14 +17,15 @@ return [
 	'web' => [
 		'domain' => null,
 		'main' => [
-			'protocol' => 'http',
-			'host' => UOJContext::httpHost(),
-			'port' => 80
+			'protocol' => getenv("UOJ_PROTOCOL") ? getenv("UOJ_PROTOCOL") : 'http',
+			'host' => getenv("UOJ_HOST") ? getenv("UOJ_HOST") : UOJContext::httpHost(),
+			'port' => getenv("UOJ_PORT") ? getenv("UOJ_PORT") : 80
 		],
 		'blog' => [
-			'protocol' => 'http',
-			'host' => UOJContext::httpHost(),
-			'port' => 80
+			'protocol' => getenv("UOJ_PROTOCOL") ? getenv("UOJ_PROTOCOL") : 'http',
+			'host' => getenv("UOJ_BLOG_HOST") ? getenv("UOJ_BLOG_HOST") : 
+					  (getenv("UOJ_HOST") ? getenv("UOJ_HOST") :UOJContext::httpHost()),
+			'port' => getenv("UOJ_PORT") ? getenv("UOJ_PORT") : 80
 		]
 	],
 	'security' => [

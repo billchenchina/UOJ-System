@@ -14,6 +14,12 @@ services:
       - UOJ_DB_USER=root
       - UOJ_DB_PASSWORD=root
       - UOJ_DB_HOST=db
+      # (Optional) protocol, host, port
+      # - UOJ_PROTOCOL=https
+      # - UOJ_HOST=example.com
+      # - UOJ_BLOG_HOST=blog.example.com
+      # - UOJ_PORT=443
+      
       # Generated automatically if following envs are left blank
       # - UOJ_CLIENT_SALT=
       # - UOJ_CHECKSUM_SALT1=
